@@ -1,0 +1,23 @@
+name: mask_rcnn
+channels:
+- !!python/unicode
+  'defaults'
+dependencies:
+- cudatoolkit
+- cudnn
+- tensorflow-gpu
+- cython
+- keras
+- python
+- scipy
+- pillow
+- cython
+- matplotlib
+- scikit-image
+- h5py
+- opencv
+- msgpack-python
+- pip
+- pip:
+  - git+https://github.com/aleju/imgaug
+  - git+https://github.com/waleedka/coco.git#subdirectory=PythonAPI
