@@ -1,3 +1,33 @@
+"""
+Mask R-CNN
+Train on the toy Balloon dataset and implement color splash effect.
+
+Copyright (c) 2018 Matterport, Inc.
+Licensed under the MIT License (see LICENSE for details)
+Written by Waleed Abdulla
+
+------------------------------------------------------------
+
+Usage: import the module (see Jupyter notebooks for examples), or run from
+       the command line as such:
+
+    # Train a new model starting from pre-trained COCO weights
+    python3 balloon.py train --dataset=/path/to/balloon/dataset --weights=coco
+
+    # Resume training a model that you had trained earlier
+    python3 balloon.py train --dataset=/path/to/balloon/dataset --weights=last
+
+    # Train a new model starting from ImageNet weights
+    python3 balloon.py train --dataset=/path/to/balloon/dataset --weights=imagenet
+
+    # Apply color splash to an image
+    python3 balloon.py splash --weights=/path/to/weights/file.h5 --image=<URL or path to file>
+
+    # Apply color splash to video using the last weights you trained
+    python3 balloon.py splash --weights=last --video=<URL or path to file>
+"""
+
+
 import os
 import sys
 import json
@@ -70,21 +100,18 @@ class WgisdDataset(utils.Dataset):
                 
         # Add images
         for image_id in instances:
-            image_path = os.path.join(dataset_dir, image_id + '.jpg')
-
-            image = skimage.io.imread(image_path)            
-            height, width = image.shape[:2]
-            
             annot_file = os.path.join(dataset_dir, image_id + '.npz')
-            polygons=annot_file
-            
-            self.add_image(
-                "uva",
-                image_id=image_id,  # use file name as a unique image id
-                path=image_path,
-                width=width, height=height,
-                polygons=polygons)
-        
+            image_path = os.path.join(dataset_dir, image_id + '.jpg')
+            if os.path.isfile(annot_file):
+                image = skimage.io.imread(image_path)            
+                height, width = image.shape[:2]
+                polygons=annot_file
+                self.add_image(
+                    "uva",
+                    image_id=image_id,  # use file name as a unique image id
+                    path=image_path,
+                    width=width, height=height,
+                    polygons=polygons)
     
     def load_mask(self, image_id):
         # Convert polygons to a bitmap mask of shape
